@@ -1,2 +1,3 @@
-# sangreal-wind
-winddataapi for windbase
+# sangreal-database
+dataapi for database
+
