@@ -1,16 +1,11 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='sangreal-database',
+    name='sangreal-db',
     version='0.0.0',
     description=('dataapi for database'),
     install_requires=[
-        # 'bs4',
-        # 'lxml',
-        # 'tushare',
-        # 'requests',
-        # 'pandas',
-        # 'fastcache',
+        'sqlalchemy',
     ],
     # long_description=open('README.rst').read(),
     author='liubola',
@@ -20,7 +15,7 @@ setup(
     license='GNU General Public License v3.0',
     packages=find_packages(),
     platforms=["all"],
-    url='https://github.com/liubola/sangreal_database',
+    url='https://github.com/liubola/sangreal_db',
     classifiers=[
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
