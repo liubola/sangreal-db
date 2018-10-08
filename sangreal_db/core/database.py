@@ -11,7 +11,7 @@ class DataBase:
         self.bind = bind
         self.session = SangrealSession(bind)
         self.tables = self.get_tables(bind)
-        for table in self.get_tables(bind):
+        for table in self.tables:
             setattr(self, table, None)
 
     def __getattribute__(self, name):
@@ -41,8 +41,9 @@ please check the table name!')
 
 if __name__ == '__main__':
     engine = create_engine(
-        "mysql://root:123@localhost:3306/test?charset=utf8"
+        "mysql://root:123@localhost:3306/blog?charset=utf8"
     )
     db0 = DataBase(engine)
-    df = db0.query(db0.NewTablex).to_df()
+    df = db0.query(db0.users).to_df()
     print(df)
+    print(db0.tables)
