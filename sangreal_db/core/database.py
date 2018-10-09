@@ -35,8 +35,8 @@ please check the table name!')
         tables = insp.get_table_names()
         return tables
 
-    def query(self, table):
-        return self.session.query(table)
+    def query(self, *columns):
+        return self.session.query(*columns)
 
 
 if __name__ == '__main__':
