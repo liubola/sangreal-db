@@ -31,13 +31,13 @@ please check the table name!')
             autoload=True,
             autoload_with=self.bind,
             schema=self.schema,
-            )
+        )
 
         return table
 
     def get_tables(self, bind):
         insp = reflection.Inspector.from_engine(bind)
-        tables = insp.get_table_names()
+        tables = insp.get_table_names(schema=self.schema, )
         return tables
 
     def query(self, *columns):
