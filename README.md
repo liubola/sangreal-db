@@ -70,13 +70,5 @@ ___
 
 ![tables](img/tables.png)
 
-
-
-
-
-
-
-
-
-
+![columns](img/columns.png)
 
