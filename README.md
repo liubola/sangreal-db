@@ -21,17 +21,46 @@ db = DataBase(engine, schema=None)
 # database下以TABLE_NAME为表名的Table类
 table = db.TABLE_NAME
 
-# 表TABLE_NAME下以COLUMN为列名的column类
-table.c.COLUMN
+# 表TABLE_NAME下以COLUMN为列名的Column类
+table.COLUMN
 
 # 继承了sqlalchemy的Query，支持同样方法
 # 返回json类格式
-db.query(db.TABLE_NAME).filter(table.c.COLUMN==....).all() 
+db.query(table).filter(table.COLUMN==....).all() 
 
 # 返回DataFrame
-db.query(db.TABLE_NAME).filter(...).to_df()
+db.query(table).filter(...).to_df()
 
 ```
+
+### 增/改
+
+```python
+# 增
+t_obj_add = table(c1=xxx, c2=xxx, c3=xxx)
+db.update(t_obj_add)
+
+# 改
+t_obj_update = db.query(table).filter(...).all()
+for t in t_obj_update:
+    t.c1 = xxx
+db.update(t_obj_update)
+
+# 或者一起搞
+# 构建一个iterable对象
+t_change = [t_obj_add] + t_obj_update
+db.update(t_change)
+```
+
+### 删
+
+```python
+# 删
+t_obj_delete = db.query(table).filter(...).first()
+db.delete(t_obj_delete)
+```
+
+___
 
 ### ipython or jupyter-notebook
 

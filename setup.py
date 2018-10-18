@@ -5,7 +5,7 @@ setup(
     version='0.0.4',
     description=('dataapi for database'),
     install_requires=[
-        'sqlalchemy',
+        'sqlalchemy >= 1.2.0',
     ],
     # long_description=open('README.rst').read(),
     author='liubola',
