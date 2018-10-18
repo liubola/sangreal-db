@@ -59,6 +59,9 @@ please check the table name!')
     def close(self):
         self.session.close()
 
+    def commit(self):
+        self.session.commit()
+
 
 if __name__ == '__main__':
     engine = create_engine("mysql://root:123@localhost:3306/blog?charset=utf8")

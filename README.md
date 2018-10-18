@@ -50,6 +50,10 @@ db.update(t_obj_update)
 # 构建一个iterable对象
 t_change = [t_obj_add] + t_obj_update
 db.update(t_change)
+
+# 或者另外一种模式
+db.query(table).filter(...).update({table.c1: "hello"}, synchronize_session=False)
+db.commit()
 ```
 
 ### 删
@@ -58,6 +62,10 @@ db.update(t_change)
 # 删
 t_obj_delete = db.query(table).filter(...).first()
 db.delete(t_obj_delete)
+
+# 或者另外一种模式
+db.query(table).filter(...).delete()
+db.commit()
 ```
 
 ___
