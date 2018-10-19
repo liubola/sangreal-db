@@ -53,11 +53,9 @@ please check the table name!')
             self.session.add_all(t_obj)
         else:
             self.session.add(t_obj)
-        self.session.commit()
 
     def delete(self, t_obj):
         self.session.delete(t_obj)
-        self.session.commit()
 
     def close(self):
         self.session.close()

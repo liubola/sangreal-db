@@ -62,17 +62,20 @@ db.query(table).filter(...).to_df()
 # 增
 t_obj_add = table(c1=xxx, c2=xxx, c3=xxx)
 db.update(t_obj_add)
+db.commit()
 
 # 改
 t_obj_update = db.query(table).filter(...).all()
 for t in t_obj_update:
     t.c1 = xxx
 db.update(t_obj_update)
+db.commit()
 
 # 或者一起搞
 # 构建一个iterable对象
 t_change = [t_obj_add] + t_obj_update
 db.update(t_change)
+db.commit()
 
 # 或者另外一种模式
 db.query(table).filter(...).update({table.c1: "hello"}, synchronize_session=False)
@@ -85,6 +88,7 @@ db.commit()
 # 删
 t_obj_delete = db.query(table).filter(...).first()
 db.delete(t_obj_delete)
+db.commit()
 
 # 或者另外一种模式
 db.query(table).filter(...).delete()
