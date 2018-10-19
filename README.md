@@ -48,7 +48,7 @@ table = db.TABLE_NAME
 table.COLUMN
 
 # 继承了sqlalchemy的Query，支持同样方法
-# 返回json类格式
+# 返回实例化对象序列
 db.query(table).filter(table.COLUMN==....).all() 
 
 # 返回DataFrame
