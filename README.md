@@ -7,7 +7,7 @@
 
 ## 使用方法
 
-### 查
+### 建表
 
 ```python
 from sangreal_db import DataBase
@@ -18,7 +18,30 @@ engine = create_engine('mysql://....')
 # 实例化
 db = DataBase(engine, schema=None)
 
+from sqlalchemy import Column, Integer, String
+
+# 构建User类
+class User(db.Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20))
+    fullname = Column(String(20))
+    password = Column(String(20))
+
+    def __repr__(self):
+        return "<User(name='%s', fullname='%s', password='%s')>" % (
+            self.name, self.fullname, self.password)
+
+# 建表
+db.create_all()
+```
+
+### 查
+
+```python
+
 # database下以TABLE_NAME为表名的Table类
+# TABLE_NAME为任意该database下存在主键的表
 table = db.TABLE_NAME
 
 # 表TABLE_NAME下以COLUMN为列名的Column类
