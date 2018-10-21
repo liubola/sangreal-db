@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sangreal-db',
-    version='0.0.7',
+    version='0.0.8',
     description=('dataapi for database'),
     install_requires=[
         'sqlalchemy >= 1.2.0',
@@ -15,7 +15,7 @@ setup(
     license='GNU General Public License v3.0',
     packages=find_packages(),
     platforms=["all"],
-    url='https://github.com/liubola/sangreal_db',
+    url='https://github.com/liubola/sangreal-db',
     classifiers=[
         'Operating System :: OS Independent',
         'Intended Audience :: Developers',
