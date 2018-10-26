@@ -10,6 +10,8 @@ from ..orm import SangrealSession
 
 class DataBase:
     def __init__(self, bind, schema=None):
+        if isinstance(bind, str):
+            bind = create_engine(bind)
         self.bind = bind
         self.metadata = MetaData(bind=bind, schema=schema)
         self.Base = declarative_base(metadata=self.metadata)
