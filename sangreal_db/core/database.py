@@ -5,14 +5,23 @@ from sqlalchemy.engine import reflection
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
 
-from ..orm import SangrealSession
+from sangreal_db.orm import SangrealSession
 
 
 class DataBase:
+    """class for easy to use orm of your database/
+    
+    Raises:
+        ValueError -- [bind must be sth like sqlalchemy's engine]
+    
+    Returns:
+        [instance of DataBase] -- []
+    """
+
     def __init__(self, bind, schema=None):
         if isinstance(bind, str):
             bind = create_engine(bind)
-        self.bind = bind
+        self._bind = bind
         self.metadata = MetaData(bind=bind, schema=schema)
         self.Base = declarative_base(metadata=self.metadata)
         self.session = SangrealSession(bind)
@@ -30,7 +39,13 @@ class DataBase:
 please check the table name!')
 
     def __repr__(self):
-        return str(self.bind).replace('Engine', 'DataBase')
+        return str(self._bind).replace(
+            type(self._bind).__name__,
+            type(self).__name__)
+
+    @property
+    def bind(self):
+        return self._bind
 
     def _reflect_table(self, table_name):
         self.metadata.reflect(only=[table_name])
@@ -76,24 +91,4 @@ please check the table name!')
 
 
 if __name__ == '__main__':
-    engine = create_engine("mysql://root:123@localhost:3306/test?charset=utf8")
-    db0 = DataBase(engine)
-    print(db0)
-    df = db0.query(db0.TEST.fuck).filter().to_df()
-    print(df)
-    print(db0.tables)
-
-    from sqlalchemy import Column, Integer, String
-
-    class User(db0.Base):
-        __tablename__ = 'fuckers'
-        id = Column(Integer, primary_key=True)
-        name = Column(String(20))
-        fullname = Column(String(20))
-        password = Column(String(20))
-
-        def __repr__(self):
-            return "<User(name='%s', fullname='%s', password='%s')>" % (
-                self.name, self.fullname, self.password)
-
-    db0.create_all()
+    pass

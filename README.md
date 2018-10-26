@@ -14,6 +14,8 @@ from sangreal_db import DataBase
 from sqlalchemy import create_engine
 
 engine = create_engine('mysql://....')
+# or
+engine = 'mysql://....'
 
 # 实例化
 db = DataBase(engine, schema=None)
