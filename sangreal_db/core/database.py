@@ -22,9 +22,9 @@ class DataBase:
         if isinstance(bind, str):
             bind = create_engine(bind)
         self._bind = bind
-        self.metadata = MetaData(bind=bind, schema=schema)
-        self.Base = declarative_base(metadata=self.metadata)
-        self.session = SangrealSession(bind)
+        self._metadata = MetaData(bind=bind, schema=schema)
+        self.Base = declarative_base(metadata=self._metadata)
+        self._session = SangrealSession(bind)
         self.tables = self._get_tables(bind, schema)
         for table in self.tables:
             setattr(self, table, 'None')
@@ -48,8 +48,8 @@ please check the table name!')
         return self._bind
 
     def _reflect_table(self, table_name):
-        self.metadata.reflect(only=[table_name])
-        Base = automap_base(metadata=self.metadata)
+        self._metadata.reflect(only=[table_name])
+        Base = automap_base(metadata=self._metadata)
         Base.prepare()
         try:
             return Base.classes[table_name]
@@ -63,31 +63,31 @@ please check the table name!')
         return tables
 
     def query(self, *columns):
-        return self.session.query(*columns)
+        return self._session.query(*columns)
 
     def update(self, t_obj):
         if isinstance(t_obj, Iterable):
-            self.session.add_all(t_obj)
+            self._session.add_all(t_obj)
         else:
-            self.session.add(t_obj)
+            self._session.add(t_obj)
 
     def delete(self, t_obj):
-        self.session.delete(t_obj)
+        self._session.delete(t_obj)
 
     def close(self):
-        self.session.close()
+        self._session.close()
 
     def commit(self):
-        self.session.commit()
+        self._session.commit()
 
     def flush(self, objects=None):
-        self.session.flush(objects=objects)
+        self._session.flush(objects=objects)
 
     def rollback(self):
-        self.session.rollback()
+        self._session.rollback()
 
     def create_all(self, tables=None, checkfirst=True):
-        self.metadata.create_all(tables=tables, checkfirst=checkfirst)
+        self._metadata.create_all(tables=tables, checkfirst=checkfirst)
 
 
 if __name__ == '__main__':
