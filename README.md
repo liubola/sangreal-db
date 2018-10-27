@@ -40,6 +40,8 @@ db.create_all()
 
 ### 查
 
+更多api用法可参考[python对Mysql操作和使用ORM框架（SQLAlchemy）](https://www.cnblogs.com/pycode/p/mysql-orm.html)
+
 ```python
 
 # database下以TABLE_NAME为表名的Table类

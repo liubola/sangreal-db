@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String
 engine = create_engine("mysql://root:123@localhost:3306/test?charset=utf8")
 db0 = DataBase(engine)
 print(db0)
+# print(db0.xxx)
 df = db0.query(db0.TEST.fuck).filter().to_df()
 print(df)
 print(db0.tables)

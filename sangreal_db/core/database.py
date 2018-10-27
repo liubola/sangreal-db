@@ -1,3 +1,4 @@
+import reprlib
 from collections import Iterable
 
 from sqlalchemy import MetaData, create_engine
@@ -35,13 +36,12 @@ class DataBase:
         return object.__getattribute__(self, table_name)
 
     def __getattr__(self, name):
-        raise ValueError(f'<{name}> is not the right table of this database, \
-please check the table name!')
+        raise ValueError(f'<{name}> is not the right table name, such as {reprlib.repr(self.tables)}.')
 
     def __repr__(self):
         return str(self._bind).replace(
             type(self._bind).__name__,
-            type(self).__name__)
+            type(self).__name__) 
 
     @property
     def bind(self):
