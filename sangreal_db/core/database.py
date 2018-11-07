@@ -23,6 +23,7 @@ class DataBase:
         if isinstance(bind, str):
             bind = create_engine(bind)
         self._bind = bind
+        self._schema = schema
         self._metadata = MetaData(bind=bind, schema=schema)
         self.Base = declarative_base(metadata=self._metadata)
         self._session = SangrealSession(bind)
@@ -36,12 +37,14 @@ class DataBase:
         return object.__getattribute__(self, table_name)
 
     def __getattr__(self, name):
-        raise ValueError(f'<{name}> is not the right table name, such as {reprlib.repr(self.tables)}.')
+        raise AttributeError(
+            f'<{name}> is not the right table name, such as {reprlib.repr(self.tables)}.'
+        )
 
     def __repr__(self):
         return str(self._bind).replace(
             type(self._bind).__name__,
-            type(self).__name__) 
+            type(self).__name__)
 
     @property
     def bind(self):
@@ -54,7 +57,9 @@ class DataBase:
         try:
             return Base.classes[table_name]
         except KeyError:
-            raise ValueError(f"There must be a primary key in {table_name}!")
+            raise ValueError(f"There must be a primary key in {table_name}! \
+or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables)}."
+                             )
 
     @staticmethod
     def _get_tables(bind, schema):
@@ -88,6 +93,7 @@ class DataBase:
 
     def create_all(self, tables=None, checkfirst=True):
         self._metadata.create_all(tables=tables, checkfirst=checkfirst)
+        self.__init__(self._bind, self._schema)
 
 
 if __name__ == '__main__':
