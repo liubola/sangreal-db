@@ -85,27 +85,28 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
                 f"The {reprlib.repr(insert_obj)} must be list of dicts type!")
 
         ignore_str = 'IGNORE' if ignore else ''
-        self._session.execute(table.__table__.insert().prefix_with(ignore_str),
-                              insert_obj)
+        return self._session.execute(
+            table.__table__.insert().prefix_with(ignore_str), insert_obj)
 
     def delete(self, t_obj):
-        self._session.delete(t_obj)
+        return self._session.delete(t_obj)
 
     def close(self):
-        self._session.close()
+        return self._session.close()
 
     def commit(self):
-        self._session.commit()
+        return self._session.commit()
 
     def flush(self, objects=None):
-        self._session.flush(objects=objects)
+        return self._session.flush(objects=objects)
 
     def rollback(self):
-        self._session.rollback()
+        return self._session.rollback()
 
     def create_all(self, tables=None, checkfirst=True):
-        self._metadata.create_all(tables=tables, checkfirst=checkfirst)
+        result = self._metadata.create_all(tables=tables, checkfirst=checkfirst)
         self.__init__(self._bind, self._schema)
+        return result
 
 
 if __name__ == '__main__':

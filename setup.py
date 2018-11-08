@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='sangreal-db',
-    version='0.0.14',
+    version='0.0.15',
     description=('dataapi for database'),
     install_requires=[
         'sqlalchemy >= 1.2.0',
