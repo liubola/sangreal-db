@@ -1,4 +1,5 @@
 import reprlib
+import pandas as pd
 from collections import Iterable
 
 from sqlalchemy import MetaData, create_engine
@@ -75,6 +76,17 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
             self._session.add_all(t_obj)
         else:
             self._session.add(t_obj)
+
+    def insert(self, table, insert_obj, ignore=True):
+        if isinstance(insert_obj, pd.DataFrame):
+            insert_obj = insert_obj.to_dict(orient='records')
+        elif not isinstance(insert_obj, list):
+            raise ValueError(
+                f"The {reprlib.repr(insert_obj)} must be list of dicts type!")
+
+        ignore_str = 'IGNORE' if ignore else ''
+        self._session.execute(table.__table__.insert().prefix_with(ignore_str),
+                              insert_obj)
 
     def delete(self, t_obj):
         self._session.delete(t_obj)

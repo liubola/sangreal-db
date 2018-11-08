@@ -60,7 +60,7 @@ db.query(table).filter(...).to_df()
 
 ```
 
-### 增/改
+### 增/改 (适用于逐条增改)
 
 ```python
 # 增
@@ -83,6 +83,18 @@ db.commit()
 
 # 或者另外一种模式
 db.query(table).filter(...).update({table.c1: "hello"}, synchronize_session=False)
+db.commit()
+```
+
+### 批量插入
+
+```python
+import pandas as pd
+df = pd.DataFrame(...)
+# 批量插入支持DataFrame格式 或 list of dicts [{'xx': ...}, ..., {}]
+# ignore默认为True，如果存在唯一性索引，会忽略重复键错误
+# 解决了pandas中 if_exist='append'中重复插入报错的问题
+db.insert(table, df, ignore=True)
 db.commit()
 ```
 
