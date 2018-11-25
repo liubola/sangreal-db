@@ -133,9 +133,12 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
     def rollback(self):
         return self._session.rollback()
 
+    def refresh(self):
+        return self.__init__(self._bind, self._schema)
+
     def create_all(self, tables=None, checkfirst=True):
         result = self._metadata.create_all(tables=tables, checkfirst=checkfirst)
-        self.__init__(self._bind, self._schema)
+        self.refresh()
         return result
 
 
