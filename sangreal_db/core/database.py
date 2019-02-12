@@ -21,6 +21,8 @@ class DataBase:
     """
 
     def __init__(self, bind, schema=None):
+        if schema == 'None':
+            schema = None
         if isinstance(bind, str):
             bind = create_engine(bind)
         self._bind = bind
@@ -137,7 +139,8 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
         return self.__init__(self._bind, self._schema)
 
     def create_all(self, tables=None, checkfirst=True):
-        result = self._metadata.create_all(tables=tables, checkfirst=checkfirst)
+        result = self._metadata.create_all(
+            tables=tables, checkfirst=checkfirst)
         self.refresh()
         return result
 
