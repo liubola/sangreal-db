@@ -36,6 +36,7 @@ class DataBase:
             setattr(self, table, 'None')
             # 可能有大小写问题
             setattr(self, table.lower(), 'None')
+            setattr(self, table.upper(), 'None')
 
     def __getattribute__(self, table_name):
         if object.__getattribute__(self, table_name) == 'None':
