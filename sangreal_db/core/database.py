@@ -6,6 +6,7 @@ from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import reflection
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.exc import InvalidRequestError
 
 from sangreal_db.orm import SangrealSession
 
@@ -33,10 +34,20 @@ class DataBase:
         self.tables = self._get_tables(bind, schema)
         for table in self.tables:
             setattr(self, table, 'None')
+            # 可能有大小写问题
+            setattr(self, table.lower(), 'None')
 
     def __getattribute__(self, table_name):
         if object.__getattribute__(self, table_name) == 'None':
-            setattr(self, table_name, self._reflect_table(table_name))
+            try:
+                setattr(self, table_name, self._reflect_table(table_name))
+            except InvalidRequestError:
+                if table_name == table_name.upper():
+                    setattr(self, table_name,
+                            self._reflect_table(table_name.lower()))
+                elif table_name == table_name.lower():
+                    setattr(self, table_name,
+                            self._reflect_table(table_name.upper()))
         return object.__getattribute__(self, table_name)
 
     def __getattr__(self, name):
