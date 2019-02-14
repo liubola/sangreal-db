@@ -1,14 +1,14 @@
 import reprlib
-import pandas as pd
 from collections import Iterable
 
+import pandas as pd
+from sangreal_db.orm import SangrealSession
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import reflection
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.exc import InvalidRequestError
-
-from sangreal_db.orm import SangrealSession
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 class DataBase:
@@ -70,7 +70,14 @@ class DataBase:
         Base = automap_base(metadata=self._metadata)
         Base.prepare()
         try:
-            return Base.classes[table_name]
+            table = Base.classes[table_name]
+            column_list = tuple(table.__dict__.keys())
+            for column in column_list:
+                c = getattr(table, column)
+                if isinstance(c, InstrumentedAttribute):
+                    setattr(table, column.upper(), c)
+                    setattr(table, column.lower(), c)
+            return table
         except KeyError:
             raise ValueError(f"There must be a primary key in {table_name}! \
 or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables)}."
