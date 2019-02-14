@@ -42,10 +42,10 @@ class DataBase:
             try:
                 setattr(self, table_name, self._reflect_table(table_name))
             except InvalidRequestError:
-                if table_name == table_name.upper():
+                try:
                     setattr(self, table_name,
                             self._reflect_table(table_name.lower()))
-                elif table_name == table_name.lower():
+                except InvalidRequestError:
                     setattr(self, table_name,
                             self._reflect_table(table_name.upper()))
         return object.__getattribute__(self, table_name)
