@@ -3,5 +3,14 @@ import pandas as pd
 
 
 class SangrealQuery(Query):
-    def to_df(self):
-        return pd.read_sql(self.statement, self.session.bind)
+    def to_df(self, **kwargs):
+        """[pandas.read_sql]
+        
+        Arguments:
+            Query {[type]} -- [description]
+        
+        Returns:
+            [pd.DataFrame or generate] -- [description]
+        """
+
+        return pd.read_sql(sql=self.statement, con=self.session.bind, **kwargs)

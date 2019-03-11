@@ -72,6 +72,7 @@ class DataBase:
         try:
             table = Base.classes[table_name]
             column_list = tuple(table.__dict__.keys())
+            # 对列名大小写进行处理
             for column in column_list:
                 c = getattr(table, column)
                 if isinstance(c, InstrumentedAttribute):
