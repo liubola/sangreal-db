@@ -13,10 +13,10 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 class DataBase:
     """class for easy to use orm of your database/
-    
+
     Raises:
         ValueError -- [bind must be sth like sqlalchemy's engine]
-    
+
     Returns:
         [instance of DataBase] -- []
     """
@@ -92,7 +92,7 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
 
     def query(self, *columns):
         """[session.query]
-        
+
         Returns:
             [Query] -- [sqlalchemy Query cls]
         """
@@ -101,7 +101,7 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
 
     def update(self, t_obj):
         """[update table]
-        
+
         Arguments:
             t_obj {[objs of DeclarativeMeta]} -- [update the table]
         """
@@ -113,17 +113,17 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
 
     def insert(self, table, insert_obj, ignore=True):
         """[insert bulk data]
-        
+
         Arguments:
             table {[DeclarativeMeta cls]} -- [reflection of table]
             insert_obj {[pd.DataFrame or list of dicts]} -- [insert_obj]
-        
+
         Keyword Arguments:
             ignore {bool} -- [wether ignore exception or not] (default: {True})
-        
+
         Raises:
             ValueError -- [f"The {reprlib.repr(insert_obj)} must be list of dicts type!"]
-        
+
         Returns:
             [type] -- [description]
         """
@@ -159,10 +159,10 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
         return self.__init__(self._bind, self._schema)
 
     def create_all(self, tables=None, checkfirst=True):
-        result = self._metadata.create_all(
+        self._metadata.create_all(
             tables=tables, checkfirst=checkfirst)
         self.refresh()
-        return result
+        return
 
 
 if __name__ == '__main__':
