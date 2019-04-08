@@ -1,6 +1,10 @@
 # sangreal-db
 基于sqlalchemy的python数据库orm包，加入对交互式编程的支持，更简易的API。
 
+## 注意
+自动补全功能在ipython>7.1.1的版本下会出现卡顿现象，如果需要，请回滚至该本版或以下。
+
+
 ## 安装
 
 ```pip install sangreal-db```
