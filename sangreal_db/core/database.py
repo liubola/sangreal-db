@@ -22,6 +22,8 @@ class DataBase:
     """
 
     def __init__(self, bind, schema=None):
+        if bind is None:
+            return
         if schema == 'None':
             schema = None
         if isinstance(bind, str):
@@ -37,6 +39,10 @@ class DataBase:
             # 可能有大小写问题
             setattr(self, table.lower(), 'None')
             setattr(self, table.upper(), 'None')
+
+    def inject(self, bind, schema=None):
+        self.__init__(bind, schema)
+        return
 
     def __getattribute__(self, table_name):
         if object.__getattribute__(self, table_name) == 'None':
@@ -111,7 +117,7 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
         else:
             self._session.add(t_obj)
 
-    def insert(self, table, insert_obj, ignore=True):
+    def insert(self, table, insert_obj, ignore=True, index=None):
         """[insert bulk data]
 
         Arguments:
@@ -135,10 +141,27 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
         elif not isinstance(insert_obj, list):
             raise ValueError(
                 f"The {reprlib.repr(insert_obj)} must be list of dicts type!")
-
-        ignore_str = 'IGNORE' if ignore else ''
-        return self._session.execute(
-            table.__table__.insert().prefix_with(ignore_str), insert_obj)
+        if self._bind.dialect.name == 'mysql':
+            ignore_str = 'IGNORE' if ignore else ''
+            return self._session.execute(
+                table.__table__.insert().prefix_with(ignore_str), insert_obj)
+        elif self._bind.dialect.name == 'sqlite':
+            ignore_str = 'OR REPLACE' if ignore else ''
+            return self._session.execute(
+                table.__table__.insert().prefix_with(ignore_str), insert_obj)
+        elif self._bind.dialect.name == 'oracle':
+            if ignore and index is None:
+                for i in table.__table__.indexes:
+                    if i.unique:
+                        index = i.name
+                if index is None:
+                    index = list(table.__table__.constraints)[0].name
+            ignore_str = f'/*+ IGNORE_ROW_ON_DUPKEY_INDEX ({table.__table__.name}, {index}) */' if ignore else ''
+            return self._session.execute(
+                table.__table__.insert().prefix_with(ignore_str), insert_obj)
+        elif self._bind.dialect.name == 'mssql':
+            raise ValueError(
+                'The insert function does not support mssql temporarily.')
 
     def delete(self, t_obj):
         return self._session.delete(t_obj)
