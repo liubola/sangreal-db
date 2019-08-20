@@ -154,6 +154,7 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
                 for i in table.__table__.indexes:
                     if i.unique:
                         index = i.name
+                        break
                 if index is None:
                     index = list(table.__table__.constraints)[0].name
             ignore_str = f'/*+ IGNORE_ROW_ON_DUPKEY_INDEX ({table.__table__.name}, {index}) */' if ignore else ''
