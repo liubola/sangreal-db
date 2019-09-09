@@ -71,6 +71,10 @@ class DataBase:
     def bind(self):
         return self._bind
 
+    @property
+    def schema(self):
+        return self._schema
+
     def _reflect_table(self, table_name):
         self._metadata.reflect(only=[table_name])
         Base = automap_base(metadata=self._metadata)
@@ -123,6 +127,8 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
         Arguments:
             table {[DeclarativeMeta cls]} -- [reflection of table]
             insert_obj {[pd.DataFrame or list of dicts]} -- [insert_obj]
+            ignore {[bool]} -- [whether or not ignore duplicate insert]
+            index {[str]} -- [the index you want to ignore]
 
         Keyword Arguments:
             ignore {bool} -- [wether ignore exception or not] (default: {True})
