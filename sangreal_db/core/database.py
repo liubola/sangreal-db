@@ -175,6 +175,21 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
     def close(self):
         return self._session.close()
 
+    def merge(self, t_obj):
+        """[replace]
+
+        Arguments:
+            t_obj {[objs of DeclarativeMeta]} -- [replace the table]
+        """
+
+        if isinstance(t_obj, Iterable):
+            for t in t_obj:
+                self._session.merge(t)
+            return
+        else:
+            return self._session.merge(t_obj)
+
+
     def commit(self):
         return self._session.commit()
 
