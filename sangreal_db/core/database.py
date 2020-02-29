@@ -166,55 +166,8 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
                 raise ValueError(
                     "You can set 'IGNORE_DUP_KEY = ON' while create the table and set the paramenter 'ignore=False'.")
         return self._session.execute(
-            table.__table__.insert().prefix_with(ignore_str), insert_obj)
+            table.__table__.insert().prefix_with(ignore_str).values(insert_obj))
 
-
-    def update(self, table, update_obj, ignore=True, index=None):
-        """[update bulk data]
-
-        Arguments:
-            table {[DeclarativeMeta cls]} -- [reflection of table]
-            insert_obj {[pd.DataFrame or list of dicts]} -- [insert_obj]
-            ignore {[bool]} -- [whether or not ignore duplicate insert]
-            index {[str]} -- [the index you want to ignore]
-
-        Keyword Arguments:
-            ignore {bool} -- [wether ignore exception or not] (default: {True})
-
-        Raises:
-            ValueError -- [f"The {reprlib.repr(insert_obj)} must be list of dicts type!"]
-
-        Returns:
-            [type] -- [description]
-        """
-
-        if isinstance(update_obj, pd.DataFrame):
-            if update_obj.empty:
-                raise ValueError('The input DataFrame is empty, please check!')
-            update_obj = update_obj.to_dict(orient='records')
-        elif not isinstance(update_obj, list):
-            raise ValueError(
-                f"The {reprlib.repr(update_obj)} must be list of dicts type!")
-        if self._bind.dialect.name == 'mysql':
-            ignore_str = 'IGNORE' if ignore else ''
-        elif self._bind.dialect.name == 'sqlite':
-            ignore_str = 'OR REPLACE' if ignore else ''
-        elif self._bind.dialect.name == 'oracle':
-            if ignore and index is None:
-                for i in table.__table__.indexes:
-                    if i.unique:
-                        index = i.name
-                        break
-                if index is None:
-                    index = list(table.__table__.constraints)[0].name
-            ignore_str = f'/*+ IGNORE_ROW_ON_DUPKEY_INDEX ({table.__table__.name}, {index}) */' if ignore else ''
-        elif self._bind.dialect.name == 'mssql':
-            ignore_str = ""
-            if ignore:
-                raise ValueError(
-                    "You can set 'IGNORE_DUP_KEY = ON' while create the table and set the paramenter 'ignore=False'.")
-        return self._session.execute(
-            table.__table__.update().prefix_with(ignore_str), update_obj)
 
     def delete(self, t_obj):
         return self._session.delete(t_obj)
