@@ -30,10 +30,10 @@ class DataBase:
             bind = create_engine(bind)
         self._bind = bind
         self._schema = schema
-        self._metadata = MetaData(bind=bind, schema=schema)
+        self._metadata = MetaData(bind=self._bind, schema=schema)
         self.Base = declarative_base(metadata=self._metadata)
-        self._session = SangrealSession(bind)
-        self.tables = self._get_tables(bind, schema)
+        self._session = SangrealSession(self._bind)
+        self.tables = self._get_tables(self._bind, schema)
         for table in self.tables:
             setattr(self, table, 'None')
             # 可能有大小写问题
@@ -93,6 +93,15 @@ class DataBase:
             raise ValueError(f"There must be a primary key in {table_name}! \
 or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables)}."
                              )
+
+    def reflect(self):
+        self._metadata.reflect()
+        Base = automap_base(metadata=self._metadata)
+        Base.prepare()
+        for k, v in Base.classes.items():
+            setattr(self, k, v)
+            setattr(self, k.lower(), v)
+            setattr(self, k.upper(), v)
 
     @staticmethod
     def _get_tables(bind, schema):
