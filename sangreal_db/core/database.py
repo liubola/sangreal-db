@@ -152,7 +152,7 @@ or <{table_name}> is not the right table name, such as {reprlib.repr(self.tables
         if isinstance(insert_obj, pd.DataFrame):
             if insert_obj.empty:
                 raise ValueError('The input DataFrame is empty, please check!')
-            insert_obj = insert_obj.to_dict(orient='records')
+            insert_obj = insert_obj.to_dict('records')
         elif not isinstance(insert_obj, list):
             raise ValueError(
                 f"The {reprlib.repr(insert_obj)} must be list of dicts type!")
